@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='utf-8' />
+		<!-- http://stackoverflow.com/a/10077359 -->
+		<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<!-- https://developers.google.com/web/updates/2014/11/Support-for-theme-color-in-Chrome-39-for-Android?hl=en -->
+		<meta name="theme-color" content="#FAF9F5">
+		<title>HereStory 2 (beta)</title>
+		<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.js'></script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js'></script>
+		<script src='js/main.js'></script>
+		<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.css' rel='stylesheet' />
+		<link href='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css' rel='stylesheet' />
+		<link href='css/main.css' rel='stylesheet' />
+	</head>
+	<body>
+		<div id='sideBar' class='ui right sidebar vertical menu'>
+			<a class="ui grey fluid label" onclick='toggleMenu();'>
+				<i class='icon remove'></i>
+				Close
+			</a>
+			<p></p>
+			<div class="ui fluid rounded image">
+				<!--<img id='imgStory' class='ui fluid rounded image' src='img/sample_shot.png'>-->
+				<img id='imgStory' src='img/nopic.png'>
+				<a id='iconExpand' class="ui left corner black label" href="">
+					<i class='icon expand'></i>
+				</a>
+				<!--<i id='iconExpand' class='icon expand'></i>-->
+			</div>
+			<p></p>
+			<label id='descLabel' class="ui fluid label">This is the description.</label>
+			<p></p>
+			<label id='tagLabel' class="ui fluid label">This is the tag.</label>
+		</div>
+
+		<div class='pusher'>
+			<div id='map'></div>
+			<div id='searchInput' class='ui raised segment'>
+				<div class='ui transparent left icon input'> <!--  onclick='toggleMenu()' -->
+					<input id='textSearch' type='text' placeholder='Search...'>
+					<i class='icon sidebar'></i>
+				</div>
+			</div>
+			<label class='ui circular icon huge button' id='addStoryButton' onclick="showAdd();">
+				<i class='icon plus' id='uploadButtonIcon' onclick="showAdd();"></i>
+			</label>
+			<label class='ui circular icon huge button' id='refreshStoriesButton' onclick="getPoints('', false);">
+				<i class='icon refresh' id='refreshButtonIcon' onclick="getPoints('', false);"></i>
+			</label>
+			<label class='ui circular icon huge button' id='centerLocButton' onclick='reCentreMap()'>
+				<i class='icon location arrow' id='centerLocButtonIcon' onclick='reCentreMap()'></i>
+			</label>
+		</div>
+		<div id='firstOverlay'>
+			<a class="ui fluid label" onclick='closeFirst();'>
+				<i class='icon remove'></i>
+				Close
+			</a>
+			<p></p>
+			<label>
+				<h4>Welcome!</h4>
+				As this is your first time using HereStory, take a moment to read over the privacy and license statements below. Please note: your use of the site is an acceptance of the following.
+				<p></p>
+				<h4 class='privacyLabel'>Privacy</h4>
+				<p></p>
+				<span class='privacyLabel'>Anything you submit through HereStory is made publically available. Any uploaded content, text or pictorial, will be viewable by anyone who uses the app. You are not required to provide any personally identifiable information and you are encouraged not to include this information in your submissions.</span>
+				<p></p>
+				<h4 class='licenseLabel'>License</h4>
+				<p></p>
+				<span class='licenseLabel'>Content submitted to HereStory is covered by the Creative Commons Attribution-NonCommercial 4.0 International License including all text and picture submissions. Please see <a id='licenseLink' href='https://creativecommons.org/licenses/by-nc/4.0/'><i class='world icon'></i>here</a> for more information.</span>
+			</label>
+		</div>
+
+		<div id='addOverlay'>
+			<a class="ui fluid label" onclick='closeAdd();'>
+				<i class='icon remove'></i>
+				Close
+			</a>
+			<p></p>
+			<form id='formStory' class='ui form transition visible' method='post' enctype='multipart/form-data'>
+				<div class='field'>
+					<label>Location</label>
+					<div class='ui disabled transparent input'>
+						<input id='textLocation' name='location' type='text'>
+					</div>
+				</div>
+
+				<div class='field'>
+					<div id='textStory' class='ui raised segment'>
+						Story
+						<p></p>
+						<div class='ui transparent fluid input'>
+							<!-- <textarea type='text' id='textAreaStory' name='story' placeholder='eg. This is my story.'></textarea> -->
+							<input type='text' id='textAreaStory' name='story' placeholder='eg. This is my story.'></input>
+						</div>
+					</div>
+				</div>
+
+				<div class='field'>
+					<div id='textTag' class='ui raised segment'>
+						Tag
+						<p></p>
+						<div class='ui transparent left icon fluid input'>
+							<!-- http://stackoverflow.com/a/769141 -->
+							<input id='storyTag' name='tag' type='text' placeholder='eg. mystory' onblur='javascript:window.scrollTo(0,0);'>
+							<i class='hashtag icon'></i>
+						</div>
+					</div>
+				</div>
+
+				<div id='takePictureField' class='field'>
+					<label for="uploadFile" class="ui grey basic fluid button">
+						<i id="pictureIcon" class="camera icon"></i>
+						Take Picture</label>
+					<input type="file" id="uploadFile" name="uploadFile" style="display:none" accept="image/*" capture> <!-- onchange="getFileName(this.files);" -->
+					<label id="uploadFileName"></label>
+				</div>
+			</form>	
+			<button id='buttonSubmit' class="ui teal basic fluid button" onclick="javascript:submitStory();">
+				<!-- <i class="cloud upload icon"></i> -->
+				<i class="cloud upload icon"></i> Submit
+			</button>		
+		</div>
+
+		<div id='uploadOverlay'>
+			<div class='ui items'>
+				<div class='item'>
+					<div id='uploadingDiv' class='middle aligned content'>
+						<div class='header'>
+							<i class="spinner loading icon"></i> Submitting story...
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
