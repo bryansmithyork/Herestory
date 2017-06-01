@@ -304,8 +304,6 @@ function centreMap(position) {
     HERE, THE DIALOG WOULD BE HIDDEN.
     ------------------------- */
 
-    console.log('Loaded...');
-
     // Return the location of the user.
     return [lng, lat];
 }
@@ -372,6 +370,36 @@ function centreMapToolbar(position) {
 
     var lat = position.coords.latitude;
     var lng = position.coords.longitude;
+
+    /*map.getSource('curSource').setData(JSON.parse({
+        'type': 'FeatureCollection',
+        'features': [{
+            'type': 'Feature',
+            'geometry': {
+                'type': 'Point',
+                'coordinates': [position.coords.longitude, position.coords.latitude]
+            },
+            'properties': {
+                'description': '<br \\>Your Current Location',
+                'icon': 'circle-stroked'
+            }
+        }]
+    }));*/
+
+    map.getSource('curSource').setData({
+        "type": "FeatureCollection",
+        "features": [{
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [lng, lat]
+            },
+            "properties": {
+                "description": "Null Island",
+                'icon': 'circle-stroked'
+            }
+        }]
+    });
 
     // This sets the location of the #textLocation input to the coordinates of the user.
     $("#textLocation").val(parseFloat(lat).toFixed(7) + ", " + parseFloat(lng).toFixed(7));
