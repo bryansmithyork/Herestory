@@ -42,7 +42,7 @@ body {
 	box-shadow: 3px 3px 5px #888888;
 }
 
-#sideBar {
+#sideBar, #menuBar {
 	opacity: 0.85;
 	padding: 2%;
 	/*padding-top: 2%;

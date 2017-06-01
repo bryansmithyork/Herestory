@@ -5,12 +5,6 @@ var coords = [];
 var url;
 var parsedData;
 
-// These two variables set the MapBox GL token and style.
-// If you are rolling your own instance of HereStory, you will need to replace these with your own.
-// See the Quickstart section here: https://www.mapbox.com/mapbox-gl-js/api/.
-var mbToken = 'pk.eyJ1IjoidmFuc21pdGgiLCJhIjoiNjRhYjVhNzkzM2Q3NTg3NTc0MTg2NjY2NDIzZjc5MGQifQ.krdCsmSwQttemQ5lXlGSVQ';
-var mbStyle = 'mapbox://styles/vansmith/cj1s0kbhh000k2snsud3j4ang';
-
 $(document).ready(function() {
 
 	// Check to see if the app is running for the first time. If so, show the first run overlay.
@@ -320,6 +314,15 @@ function centreMap(position) {
 function toggleMenu() {
     // Set the sidebar to overlay the map (the other option is to push the map to the side but that takes away space on smaller screens).
     $('#sideBar')
+        .sidebar('setting', 'transition', 'overlay')
+        .sidebar('setting', 'mobileTransition', 'overlay')
+        .sidebar('toggle');
+}
+
+// Toggle the side menu that contains the points info including story and tag info and picture (if applicable).
+function toggleOpts() {
+    // Set the sidebar to overlay the map (the other option is to push the map to the side but that takes away space on smaller screens).
+    $('#menuBar')
         .sidebar('setting', 'transition', 'overlay')
         .sidebar('setting', 'mobileTransition', 'overlay')
         .sidebar('toggle');

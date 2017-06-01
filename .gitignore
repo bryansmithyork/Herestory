@@ -1,4 +1,5 @@
-db_scripts/credentials.php
-.vscode/
 .DS_Store
+db_scripts/credentials.php
+js/mapbox_prefs.js
+.vscode/
 images/
